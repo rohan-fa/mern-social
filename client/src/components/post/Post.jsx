@@ -2,7 +2,7 @@ import "./post.css";
 import {MoreVert} from "@mui/icons-material"
 import { useState, useEffect } from "react";
 import axios from "axios";
-
+import {format} from "timeago.js";
 
 function Post({post}) {
     
@@ -20,7 +20,7 @@ function Post({post}) {
           setUser(res.data);
         };
         fetchUser();
-      }, []);
+      }, [post.userId]);    //whenever we change this ${post.userId},It should be rerender. if your using something changable insise useEffect,likesome variables, you have to write here its dependency, 
 
     const likeHandler = ()=> {
         setlike(isLiked ? like-1 : like+1)   //inside this, setlike= (becasue we are going to change this like, and new like going to change according to our logic,** if this isLike which means we already like this post, ? im going to say like-1, : if you didnot like before, like+1. but now the counter is increasing so we need to make isLike state to false
@@ -32,9 +32,9 @@ function Post({post}) {
         <div className="postWrapper">
             <div className="postTop">
                 <div className="postTopLeft">
-                    <img className="postProfileImg" src={user.profilePicture} alt="" /> 
+                    <img className="postProfileImg" src={user.profilePicture || PF+"pictures/noAvator.png"} alt="" /> {/* if there is no profilepicture,or PF+"person/noA"  */}
                     <span className="postUserName">{user.username}</span>
-                    <span className="postDate">{post.date}</span>
+                    <span className="postDate">{format(post.createdAt)}</span>
                 </div>
                 <div className="postTopRight">
                     <MoreVert />
@@ -42,7 +42,7 @@ function Post({post}) {
             </div>
             <div className="postCenter">
                 <span className="postText">{post?.desc}</span>
-                <img className="postImg" src={PF+post.photo} alt="" />
+                <img className="postImg" src={PF+post.img} alt="" />
             </div>
             <div className="postBottom">
                 <div className="postBottomLeft">
